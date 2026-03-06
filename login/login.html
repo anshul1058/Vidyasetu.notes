@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyPlatform — Sign In to Your Study Hub</title>
+    <meta name="description"
+        content="Sign in to StudyPlatform to access premium study materials, notes, PYQs, and collaborative study groups." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "primary-dark": "#c9990a",
+                        "bg-dark": "#0e1015",
+                        "bg-dark-elevated": "#161a21",
+                        "bg-card": "#1a1e27",
+                        "surface": "#21262f",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- Login Page Styles -->
+    <link rel="stylesheet" href="login.css" />
+</head>
+
+<body class="lamp-off bg-bg-dark font-display text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+    <!-- Floating Particles Container -->
+    <div id="particles-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <div class="relative flex h-auto min-h-screen w-full flex-col">
+
+        <!-- ═══════════ HEADER ═══════════ -->
+        <header id="main-header"
+            class="flex items-center justify-between whitespace-nowrap px-5 md:px-12 py-5 z-30 transition-opacity duration-700"
+            style="opacity: 0.25;">
+            <div class="flex items-center gap-3 text-white">
+                <div
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-yellow-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                    <svg class="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
+                    </svg>
+                </div>
+                <h2 class="text-lg font-bold tracking-tight">StudyPlatform</h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex items-center gap-8">
+                    <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300"
+                        href="#">Home</a>
+                    <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300"
+                        href="#">Browse</a>
+                    <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300"
+                        href="#">Groups</a>
+                </nav>
+                <button id="signup-btn"
+                    class="hidden sm:flex min-w-[80px] cursor-pointer items-center justify-center rounded-lg h-9 px-4 bg-primary/10 hover:bg-primary/20 text-primary text-[13px] font-semibold transition-all duration-300 border border-primary/20 hover:border-primary/40">
+                    <span>Sign Up</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ═══════════ MAIN CONTENT ═══════════ -->
+        <div class="flex-1 flex items-center justify-center py-6 px-4 sm:px-8 relative">
+
+            <!-- Background ambient glow -->
+            <div id="bg-glow" class="absolute inset-0 pointer-events-none transition-all duration-700 z-0"
+                style="background: radial-gradient(ellipse 50% 70% at 30% 50%, rgba(242,185,13,0.08) 0%, transparent 70%);">
+            </div>
+
+            <div class="w-full max-w-[1100px] flex flex-col md:flex-row items-center relative z-10">
+
+                <!-- ─────── LEFT: Lamp Section ─────── -->
+                <div
+                    class="w-full md:w-5/12 relative flex items-center justify-center min-h-[520px] z-10 hidden md:flex">
+                    <div class="relative flex flex-col items-center mt-6">
+                        <div class="lamp-light-cone"></div>
+                        <div id="lamp-shade"
+                            class="w-[150px] h-[100px] bg-gradient-to-b from-zinc-700 to-zinc-800 rounded-t-[55px] border-b-[5px] border-primary z-20"
+                            style="box-shadow: 0 12px 50px rgba(242,185,13,0.5), 0 4px 20px rgba(242,185,13,0.3);">
+                        </div>
+                        <div id="lamp-glow" class="w-24 h-24 bg-primary/80 rounded-full absolute top-[75px] z-10"
+                            style="filter: blur(28px);"></div>
+                        <div
+                            class="w-[3px] h-[280px] bg-gradient-to-b from-zinc-600 via-zinc-700 to-zinc-800 z-10 -mt-[2px] shadow-xl relative">
+                            <div
+                                class="absolute inset-0 w-full bg-gradient-to-r from-transparent via-white/5 to-transparent">
+                            </div>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-10 h-3 bg-gradient-to-t from-zinc-800 to-zinc-600 rounded-t-md mx-auto">
+                            </div>
+                            <div class="w-32 h-4 bg-gradient-to-t from-zinc-900 to-zinc-700 rounded-t-lg"
+                                style="box-shadow: 0 -4px 12px rgba(0,0,0,0.5);"></div>
+                        </div>
+                        <div id="pull-chain-container"
+                            class="absolute top-[98px] right-[10px] flex flex-col items-center z-30 group cursor-pointer p-3 -mr-2"
+                            onclick="toggleLamp()">
+                            <div
+                                class="w-[1.5px] h-[70px] bg-zinc-500 group-hover:bg-zinc-400 transition-colors duration-300">
+                            </div>
+                            <div id="pill-chain-ball"
+                                class="w-[14px] h-[14px] bg-primary rounded-full group-hover:scale-125 transition-all duration-300"
+                                style="box-shadow: 0 0 12px rgba(242,185,13,0.7);"></div>
+                            <div id="lamp-tooltip"
+                                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[11px] text-slate-500 whitespace-nowrap font-medium">
+                                Click to toggle
+                            </div>
+                        </div>
+                        <p id="lamp-status-text"
+                            class="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-slate-600 font-medium tracking-wider uppercase opacity-0 transition-opacity duration-500 select-none">
+                            ✦ Pull to illuminate ✦
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ─────── RIGHT: Login Card ─────── -->
+                <div class="w-full md:w-7/12 flex items-center justify-center p-4 lg:p-8 z-20">
+                    <div id="login-card"
+                        class="w-full max-w-[420px] flex flex-col gap-6 bg-bg-card/70 backdrop-blur-2xl p-9 rounded-[22px] border border-white/[0.07] relative overflow-hidden"
+                        style="opacity: 0; transform: translateY(6px) scale(0.99); box-shadow: 0 25px 60px -15px rgba(0,0,0,0.6), 0 0 80px -20px rgba(242,185,13,0.06);">
+                        <div
+                            class="absolute -top-28 -left-28 w-56 h-56 bg-primary/[0.06] blur-[70px] rounded-full pointer-events-none">
+                        </div>
+                        <div
+                            class="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/[0.03] blur-[60px] rounded-full pointer-events-none">
+                        </div>
+
+                        <div class="flex flex-col gap-1.5 text-left z-10">
+                            <h1 class="text-3xl font-extrabold leading-tight tracking-tight text-white">Welcome Back
+                            </h1>
+                            <p class="text-[13px] font-normal leading-relaxed text-slate-500">
+                                Turn on the lamp and sign in to access your premium study materials and groups.
+                            </p>
+                        </div>
+
+                        <form id="login-form" class="flex flex-col gap-4 z-10" onsubmit="handleLogin(event)">
+                            <label class="flex flex-col w-full gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Username</span>
+                                <div class="relative group input-glow rounded-xl transition-all duration-300">
+                                    <span
+                                        class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors duration-300"
+                                        style="font-size:20px;">person</span>
+                                    <input id="input-username"
+                                        class="flex w-full rounded-xl text-white focus:outline-none border border-white/[0.07] bg-black/40 h-12 placeholder:text-slate-600 pl-11 pr-4 text-sm transition-all duration-300 focus:border-primary/30"
+                                        placeholder="Enter your username" autocomplete="username" />
+                                </div>
+                            </label>
+                            <label class="flex flex-col w-full gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Password</span>
+                                <div class="relative group input-glow rounded-xl transition-all duration-300">
+                                    <span
+                                        class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors duration-300"
+                                        style="font-size:20px;">lock</span>
+                                    <input id="input-password"
+                                        class="flex w-full rounded-xl text-white focus:outline-none border border-white/[0.07] bg-black/40 h-12 placeholder:text-slate-600 pl-11 pr-11 text-sm transition-all duration-300 focus:border-primary/30"
+                                        placeholder="Enter your password" type="password"
+                                        autocomplete="current-password" />
+                                    <button type="button" id="toggle-password"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors duration-300 cursor-pointer"
+                                        onclick="togglePasswordVisibility()">
+                                        <span class="material-symbols-outlined" style="font-size:20px;"
+                                            id="pw-icon">visibility_off</span>
+                                    </button>
+                                </div>
+                            </label>
+                            <div class="flex justify-between items-center">
+                                <label class="flex items-center gap-2.5 cursor-pointer group">
+                                    <input
+                                        class="rounded border-white/15 bg-black/40 text-primary focus:ring-primary focus:ring-offset-0 w-[15px] h-[15px] transition-colors cursor-pointer"
+                                        type="checkbox" id="remember-me" />
+                                    <span
+                                        class="text-[12px] text-slate-500 group-hover:text-slate-400 transition-colors select-none">Remember
+                                        me</span>
+                                </label>
+                                <a class="text-[12px] text-primary/80 hover:text-primary transition-colors font-medium"
+                                    href="#">Forgot Password?</a>
+                            </div>
+                            <button id="signin-btn" type="submit"
+                                class="btn-shimmer mt-2 flex w-full cursor-pointer items-center justify-center rounded-xl h-12 bg-gradient-to-r from-primary via-yellow-400 to-yellow-500 text-gray-900 text-sm font-bold tracking-wide transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                                style="box-shadow: 0 8px 30px rgba(242,185,13,0.25);"
+                                onmouseover="this.style.boxShadow='0 14px 40px rgba(242,185,13,0.4)'"
+                                onmouseout="this.style.boxShadow='0 8px 30px rgba(242,185,13,0.25)'">
+                                <span id="btn-text">Sign In to Platform</span>
+                                <svg id="btn-loader" class="hidden loader-spin ml-2" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path
+                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                </svg>
+                            </button>
+                        </form>
+
+                        <div class="flex items-center gap-3 z-10">
+                            <div class="flex-1 h-px bg-white/[0.06]"></div>
+                            <span
+                                class="text-[11px] text-slate-600 font-medium uppercase tracking-widest select-none">Or
+                                continue with</span>
+                            <div class="flex-1 h-px bg-white/[0.06]"></div>
+                        </div>
+
+                        <div class="flex gap-3 z-10">
+                            <button id="google-btn"
+                                class="social-btn flex-1 flex items-center justify-center gap-2.5 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.12] cursor-pointer">
+                                <svg width="18" height="18" viewBox="0 0 24 24">
+                                    <path fill="#4285F4"
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                                    <path fill="#34A853"
+                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                    <path fill="#FBBC05"
+                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                    <path fill="#EA4335"
+                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                </svg>
+                                <span class="text-[12px] font-medium text-slate-400">Continue with Google</span>
+                            </button>
+                        </div>
+
+                        <p class="text-center text-[12px] text-slate-600 z-10 select-none">
+                            Don't have an account?
+                            <a href="#" class="text-primary/90 hover:text-primary font-semibold transition-colors">Sign
+                                Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center py-4 px-4 z-10">
+            <p class="text-[11px] text-slate-700 font-medium">
+                © 2026 StudyPlatform · Built for students, by students.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Login Page Scripts -->
+    <script src="login.js"></script>
+</body>
+
+</html>

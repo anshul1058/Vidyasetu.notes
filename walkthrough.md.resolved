@@ -1,0 +1,38 @@
+# StudyPlatform Login Page — Walkthrough
+
+## What was built
+A premium dark-mode login page for StudyPlatform with an interactive lamp toggle metaphor, glassmorphism card, GSAP animations, and social login.
+
+## Screenshots
+
+### 🔆 Lamp ON — Login Ready
+![Lamp ON state](C:\Users\bhava\.gemini\antigravity\brain\28d6c081-edfc-4313-9584-513fd36b0675\login_on_state_1772805866972.png)
+
+### 🌑 Lamp OFF — Dimmed State
+![Lamp OFF state](C:\Users\bhava\.gemini\antigravity\brain\28d6c081-edfc-4313-9584-513fd36b0675\login_off_state_1772805937651.png)
+
+### ✍️ Form Filled + Password Visible
+![Form filled](C:\Users\bhava\.gemini\antigravity\brain\28d6c081-edfc-4313-9584-513fd36b0675\login_form_filled_1772805995518.png)
+
+### 🎬 Full Interaction Recording
+![Demo recording](C:\Users\bhava\.gemini\antigravity\brain\28d6c081-edfc-4313-9584-513fd36b0675\login_page_demo_1772805669649.webp)
+
+## Key Features
+| Feature | Status |
+|---|---|
+| Interactive lamp toggle (ON/OFF) | ✅ |
+| GSAP entrance animations | ✅ |
+| Glassmorphism login card | ✅ |
+| Floating golden particles | ✅ |
+| Password visibility toggle | ✅ |
+| Social login (Google + GitHub) | ✅ |
+| Shimmer button hover effect | ✅ |
+| "Pull to illuminate" hint text | ✅ |
+| Responsive layout | ✅ |
+| SEO meta tags | ✅ |
+
+## Stitch Design
+Generated via [StitchMCP project `4695242250215541199`](https://stitch.withgoogle.com/projects/4695242250215541199) — used as visual reference and enhanced with custom interactivity.
+
+## File Modified
+- [index.html](file:///d:/antigravity/index.html)
