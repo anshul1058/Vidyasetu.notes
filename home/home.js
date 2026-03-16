@@ -1,5 +1,93 @@
 // home.js - Recreated automatically based on home.html structure
 
+// ==========================================
+// Rotating Study Tips Typewriter
+// ==========================================
+(function () {
+    const el = document.getElementById('tip-text');
+    const cursor = document.getElementById('tip-cursor');
+    if (!el) return;
+
+    const tips = [
+        'Tip: Use spaced repetition to retain information longer.',
+        'Tip: Take a 5-min break every 25 mins — try the Pomodoro technique!',
+        'Tip: Teaching a concept to someone else is the best way to learn it.',
+        'Tip: Handwriting notes improves memory retention over typing.',
+        'Tip: Sleep consolidates memory — study before bed for better recall.',
+        'Tip: Active recall beats re-reading every time.',
+        'Tip: Break big topics into smaller chunks to avoid overwhelm.',
+        'Tip: Mind maps help connect concepts visually for deeper understanding.',
+        'Tip: Stay hydrated — even mild dehydration affects concentration.',
+        'Tip: Review your notes within 24 hours to boost long-term retention.',
+    ];
+
+    let tipIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function shuffle() {
+        tipIndex = Math.floor(Math.random() * tips.length);
+    }
+
+    function typeTip() {
+        const current = tips[tipIndex];
+
+        if (!isDeleting) {
+            el.textContent = current.slice(0, charIndex + 1);
+            charIndex++;
+            if (charIndex === current.length) {
+                setTimeout(() => { isDeleting = true; typeTip(); }, 2800);
+                return;
+            }
+        } else {
+            el.textContent = current.slice(0, charIndex - 1);
+            charIndex--;
+            if (charIndex === 0) {
+                isDeleting = false;
+                shuffle();
+                setTimeout(typeTip, 400);
+                return;
+            }
+        }
+
+        setTimeout(typeTip, isDeleting ? 25 : 45);
+    }
+
+    // Start after heading animation finishes
+    setTimeout(() => { shuffle(); typeTip(); }, tips[0].length * 60 + 1500);
+})();
+
+// ==========================================
+// Typewriter Heading Animation
+// ==========================================
+(function () {
+    const el = document.getElementById('typewriter-text');
+    if (!el) return;
+
+    const plainText = 'Welcome to ';
+    const brandText = 'StudyPlatform';
+    const full = plainText + brandText;
+    let i = 0;
+
+    function type() {
+        if (i <= full.length) {
+            const plain = full.slice(0, Math.min(i, plainText.length));
+            const brand = i > plainText.length ? full.slice(plainText.length, i) : '';
+            el.innerHTML = plain + (brand ? `<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400">${brand}</span>` : '');
+            i++;
+            setTimeout(type, 60);
+        } else {
+            // hide cursor after done
+            setTimeout(() => {
+                const cursor = document.getElementById('typewriter-cursor');
+                if (cursor) cursor.style.display = 'none';
+            }, 1200);
+        }
+    }
+
+    type();
+})();
+
 // Global state
 let currentPdfFile = null;
 let isChatbotOpen = false;
