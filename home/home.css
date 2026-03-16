@@ -1,5 +1,43 @@
 /* home.css - Recreated automatically */
 
+/* Leaderboard row hover animation */
+.leaderboard-row {
+    cursor: default;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.leaderboard-row:hover {
+    transform: translateX(4px);
+}
+
+/* Typewriter cursor blink */
+.typewriter-cursor {
+    display: inline-block;
+    color: var(--primary-color, #fbbf24);
+    animation: blink 0.75s step-end infinite;
+    font-weight: 300;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Filter Dropdown - show on hover */
+.filter-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.filter-wrapper:hover .filter-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
 /* Custom Scrollbar for the AI results area */
 ::-webkit-scrollbar {
     width: 6px;
