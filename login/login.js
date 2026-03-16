@@ -127,24 +127,102 @@ function togglePasswordVisibility() {
     }
 }
 
-// ───── Login Handler (demo) ─────
-function handleLogin(e) {
+// ───── Toast Notification System ─────
+function showToast(message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toast-container') || createToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icons = {
+        success: 'check_circle',
+        error: 'error',
+        info: 'info',
+    };
+
+    toast.innerHTML = `
+        <span class="material-symbols-outlined toast-icon" style="font-size:20px;">${icons[type] || icons.info}</span>
+        <span class="toast-message">${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    if (typeof gsap !== 'undefined') {
+        gsap.fromTo(toast,
+            { opacity: 0, x: 40, scale: 0.95 },
+            { opacity: 1, x: 0, scale: 1, duration: 0.4, ease: "back.out(1.4)" }
+        );
+
+        setTimeout(() => {
+            gsap.to(toast, {
+                opacity: 0, x: 40, scale: 0.9,
+                duration: 0.3, ease: "power2.in",
+                onComplete: () => toast.remove()
+            });
+        }, duration);
+    } else {
+        setTimeout(() => toast.remove(), duration);
+    }
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = 'position:fixed;top:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:12px;pointer-events:none;';
+    document.body.appendChild(container);
+    return container;
+}
+
+// ───── Login Handler ─────
+async function handleLogin(e) {
     e.preventDefault();
+    if (!window.supabase) {
+        showToast('Supabase not initialized', 'error');
+        return;
+    }
+
+    const emailInput = document.getElementById('input-username');
+    const passwordInput = document.getElementById('input-password');
     const btn = document.getElementById('signin-btn');
     const btnText = document.getElementById('btn-text');
     const loader = document.getElementById('btn-loader');
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        showToast('Please fill in all fields', 'error');
+        return;
+    }
 
     btnText.textContent = 'Signing in...';
     loader.classList.remove('hidden');
     btn.disabled = true;
     btn.style.opacity = '0.8';
 
-    setTimeout(() => {
+    try {
+        const { data, error } = await window.supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+            showToast('Login successful!', 'success');
+            // Redirect to home page after short delay
+            setTimeout(() => {
+                window.location.href = '../home/home.html';
+            }, 500);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showToast(error.message || 'Login failed', 'error');
+    } finally {
         btnText.textContent = 'Sign In to Platform';
         loader.classList.add('hidden');
         btn.disabled = false;
         btn.style.opacity = '1';
-    }, 2000);
+    }
 }
 
 // ───── Entrance Animations ─────
@@ -283,6 +361,11 @@ function animateFirefly(fly, scale) {
 
 // ───── Init ─────
 document.addEventListener('DOMContentLoaded', () => {
+    // Create toast container
+    if (!document.getElementById('toast-container')) {
+        createToastContainer();
+    }
+
     // Start with lamp OFF
     document.body.classList.add('lamp-off');
     if (loginCard) {
@@ -294,6 +377,13 @@ document.addEventListener('DOMContentLoaded', () => {
     createParticles();
     createFireflies();
     initCursorRepulsion();
+    playEntrance();
+    
+    // Wire up Google button
+    const googleBtn = document.getElementById('google-btn');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', handleGoogleSignIn);
+    }
 });
 
 // ───── Cursor Repulsion for Fireflies ─────
@@ -462,8 +552,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
         // Redirect after a short delay
         setTimeout(() => {
-            // window.location.href = '../home/home.html';
-            console.log('🚧 Auto-redirect disabled so you can preview the login UI.');
+            window.location.href = '../home/home.html';
         }, 2000);
 
     } else if (event === 'SIGNED_OUT') {

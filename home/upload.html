@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Material — StudyPlatform</title>
+    <meta name="description" content="Share your study materials, notes, and resources with the community." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../theme.js"></script>
+
+    <link rel="stylesheet" href="upload.css" />
+</head>
+
+<body class="bg-bg-dark font-display text-slate-100 min-h-screen flex flex-col">
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header class="flex items-center justify-between whitespace-nowrap px-5 md:px-12 py-4 z-30 bg-[#0e1015]/30 backdrop-blur-xl border-b border-white/[0.04]">
+        <div class="flex items-center gap-3 text-white">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-yellow-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                <svg class="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold tracking-tight">StudyPlatform</h2>
+        </div>
+        <div class="flex items-center gap-4">
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="home.html">Home</a>
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="browse.html">Browse</a>
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="groups.html">Groups</a>
+            </nav>
+            <div class="relative group">
+                <div id="user-avatar" class="w-8 h-8 rounded-full bg-surface border border-white/10 flex items-center justify-center cursor-pointer hover:border-primary/30 transition-all" onclick="toggleUserMenu()">
+                    <span class="material-symbols-outlined text-slate-400" style="font-size:18px;">person</span>
+                </div>
+                <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-[#0e1015]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div class="px-4 py-3 border-b border-white/5">
+                        <p id="user-email" class="text-[13px] text-slate-400">Loading...</p>
+                    </div>
+                    <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-primary hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined" style="font-size:18px;">person</span>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="upload.html" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-primary hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined" style="font-size:18px;">upload</span>
+                        <span>Upload Material</span>
+                    </a>
+                    <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all border-t border-white/5 mt-1">
+                        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-2xl">
+
+            <!-- Upload Card -->
+            <div class="bg-[#0e1015]/40 backdrop-blur-[32px] saturate-150 rounded-[22px] border border-white/[0.08] border-t-white/[0.15] border-l-white/[0.12] p-8 relative overflow-hidden"
+                style="box-shadow: 0 32px 64px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 80px -20px color-mix(in srgb, var(--primary-color) 15%, transparent);">
+
+                <!-- Ambient glow -->
+                <div class="absolute -top-28 -left-28 w-56 h-56 bg-primary/[0.06] blur-[70px] rounded-full pointer-events-none"></div>
+                <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-primary/[0.03] blur-[60px] rounded-full pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <!-- Header -->
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-yellow-500/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary" style="font-size:24px;">upload_file</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-extrabold text-white">Upload Material</h1>
+                            <p class="text-[13px] text-slate-500">Share your knowledge with the community</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Form -->
+                    <form id="upload-form" class="flex flex-col gap-5">
+
+                        <!-- File Drop Zone -->
+                        <div id="drop-zone" class="border-2 border-dashed border-white/[0.08] rounded-2xl p-8 flex flex-col items-center gap-4 cursor-pointer hover:border-primary/30 hover:bg-primary/[0.02] transition-all duration-300">
+                            <div class="w-16 h-16 rounded-2xl bg-primary/[0.08] flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary/70" style="font-size:32px;">upload_file</span>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-[14px] font-semibold text-slate-300">Drop your file here</p>
+                                <p class="text-[12px] text-slate-600 mt-1">PDF, PPT, DOCX (max 50MB)</p>
+                            </div>
+                            <input type="file" id="file-input" accept=".pdf,.ppt,.pptx,.doc,.docx" class="hidden" />
+                        </div>
+
+                        <!-- File Info (shown after selection) -->
+                        <div id="file-info" class="hidden flex items-center gap-3 p-4 bg-primary/[0.04] border border-white/[0.04] rounded-xl">
+                            <span class="material-symbols-outlined text-primary" style="font-size:20px;">description</span>
+                            <span id="file-name" class="text-[13px] font-medium text-slate-300 flex-1 truncate"></span>
+                            <span id="file-size" class="text-[12px] text-slate-500"></span>
+                            <button type="button" onclick="clearFile()" class="text-slate-500 hover:text-red-400 transition-colors">
+                                <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Title -->
+                        <label class="flex flex-col gap-1.5">
+                            <span class="text-[13px] font-medium text-slate-400">Title *</span>
+                            <input type="text" id="title-input" required placeholder="e.g., Data Structures - Unit 3 Notes"
+                                class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 placeholder:text-slate-600 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                        </label>
+
+                        <!-- Description -->
+                        <label class="flex flex-col gap-1.5">
+                            <span class="text-[13px] font-medium text-slate-400">Description</span>
+                            <textarea id="description-input" rows="3" placeholder="Briefly describe what this material covers..."
+                                class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md p-4 placeholder:text-slate-600 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] resize-none"></textarea>
+                        </label>
+
+                        <!-- Stream & Branch Row -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex flex-col gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Stream *</span>
+                                <select id="stream-input" required
+                                    class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] cursor-pointer">
+                                    <option value="">Select Stream</option>
+                                    <option value="10th">10th</option>
+                                    <option value="11th">11th</option>
+                                    <option value="btech">B.Tech</option>
+                                    <option value="jee">JEE</option>
+                                    <option value="upsc">UPSC</option>
+                                    <option value="neet">NEET</option>
+                                </select>
+                            </label>
+
+                            <label class="flex flex-col gap-1.5 hidden" id="branch-container">
+                                <span class="text-[13px] font-medium text-slate-400">Branch *</span>
+                                <select id="branch-input"
+                                    class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] cursor-pointer">
+                                    <option value="">Select Branch</option>
+                                    <option value="computer_science">Computer Science</option>
+                                    <option value="mechanical">Mechanical</option>
+                                    <option value="civil">Civil</option>
+                                    <option value="entc">ENTC</option>
+                                    <option value="it">IT</option>
+                                    <option value="electrical">Electrical</option>
+                                    <option value="electronics">Electronics</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <!-- Autonomous Status (Hidden by default, shown for B.Tech) -->
+                        <div id="autonomous-container" class="hidden flex-col gap-3">
+                            <span class="text-[13px] font-medium text-slate-400">College Type *</span>
+                            <div class="flex items-center gap-6">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="autonomous_status" value="autonomous" class="w-4 h-4 text-primary bg-white/[0.03] border-white/[0.2] focus:ring-primary/50 focus:ring-offset-0" />
+                                    <span class="text-[14px] text-slate-300">Autonomous</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="autonomous_status" value="non_autonomous" class="w-4 h-4 text-primary bg-white/[0.03] border-white/[0.2] focus:ring-primary/50 focus:ring-offset-0" />
+                                    <span class="text-[14px] text-slate-300">Non-Autonomous</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- College / University Search (Hidden by default based on Autonomous Status) -->
+                        <div id="institution-search-container" class="hidden grid-cols-1 gap-4">
+                            <label class="flex flex-col gap-1.5" id="college-search-container" style="display: none;">
+                                <span class="text-[13px] font-medium text-slate-400">Search College *</span>
+                                <div class="relative">
+                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style="font-size: 18px;">search</span>
+                                    <input type="text" id="college-input" placeholder="e.g., College of Engineering Pune (COEP)"
+                                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 pl-11 pr-4 placeholder:text-slate-600 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                                </div>
+                            </label>
+
+                            <label class="flex flex-col gap-1.5" id="university-search-container" style="display: none;">
+                                <span class="text-[13px] font-medium text-slate-400">Search University *</span>
+                                <div class="relative">
+                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" style="font-size: 18px;">search</span>
+                                    <input type="text" id="university-input" placeholder="e.g., Pune University (SPPU)"
+                                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 pl-11 pr-4 placeholder:text-slate-600 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                                </div>
+                            </label>
+                        </div>
+
+                            <label class="flex flex-col gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Semester</span>
+                                <select id="semester-input"
+                                    class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] cursor-pointer">
+                                    <option value="">Select Semester</option>
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                    <option value="3">Semester 3</option>
+                                    <option value="4">Semester 4</option>
+                                    <option value="5">Semester 5</option>
+                                    <option value="6">Semester 6</option>
+                                    <option value="7">Semester 7</option>
+                                    <option value="8">Semester 8</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <!-- Subject & Category Row -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex flex-col gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Subject *</span>
+                                <input type="text" id="subject-input" required placeholder="e.g., Data Structures"
+                                    class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 placeholder:text-slate-600 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                            </label>
+
+                            <label class="flex flex-col gap-1.5">
+                                <span class="text-[13px] font-medium text-slate-400">Category *</span>
+                                <select id="category-input" required
+                                    class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05] cursor-pointer">
+                                    <option value="">Select Category</option>
+                                    <option value="notes">Notes</option>
+                                    <option value="pyqs">Previous Year Questions</option>
+                                    <option value="assignments">Assignments</option>
+                                    <option value="books">Books</option>
+                                    <option value="presentations">Presentations</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="upload-btn"
+                            class="mt-2 flex w-full cursor-pointer items-center justify-center rounded-xl h-12 bg-gradient-to-r from-primary to-primary-dark text-white text-[14px] font-bold tracking-wide transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                            style="box-shadow: 0 8px 30px color-mix(in srgb, var(--primary-color) 25%, transparent);">
+                            <span id="btn-text">Upload Material</span>
+                            <svg id="btn-loader" class="hidden loader-spin ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="mt-6 p-5 rounded-xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl">
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary mt-0.5" style="font-size:20px;">info</span>
+                    <div>
+                        <h3 class="text-[13px] font-semibold text-white mb-1">Upload Guidelines</h3>
+                        <ul class="text-[12px] text-slate-500 space-y-1">
+                            <li>• Ensure you have the right to share this material</li>
+                            <li>• Use clear, descriptive titles for better discoverability</li>
+                            <li>• PDF format is recommended for notes and documents</li>
+                            <li>• Maximum file size: 50MB</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <script src="../login/supabase-config.js"></script>
+    <script src="upload.js"></script>
+</body>
+
+</html>

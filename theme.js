@@ -13,6 +13,7 @@ const THEMES = {
 
 // 1. Get saved theme or default to yellow
 const savedTheme = localStorage.getItem('study_platform_theme') || 'yellow';
+const savedDarkMode = localStorage.getItem('study_platform_dark_mode') !== 'false'; // Default to dark
 
 // Utility to convert Hex to RGB string for Tailwind
 function hexToRgb(hex) {
@@ -68,6 +69,32 @@ function applyTheme(themeName) {
 
 // Ensure first apply happens immediately before page renders
 applyTheme(savedTheme);
+
+// ═════════════════ DARK MODE TOGGLE ═════════════════
+function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('study_platform_dark_mode', isDark);
+    
+    // Update theme icon if present
+    const themeIcon = document.getElementById('theme-icon');
+    if (themeIcon) {
+        themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+    }
+}
+
+// Initialize dark mode on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Apply saved dark mode preference
+    if (savedDarkMode) {
+        document.body.classList.add('dark');
+    }
+
+    // Update theme icon
+    const themeIcon = document.getElementById('theme-icon');
+    if (themeIcon) {
+        themeIcon.textContent = savedDarkMode ? 'light_mode' : 'dark_mode';
+    }
+});
 
 // 4. Inject Theme Switcher UI after DOM load
 document.addEventListener('DOMContentLoaded', () => {

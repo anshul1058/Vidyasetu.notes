@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(supabase link:*)",
+      "Bash(curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase_windows_amd64.zip -o supabase.zip && unzip -o supabase.zip && mv supabase.exe . && rm supabase.zip)",
+      "WebFetch(domain:github.com)",
+      "Bash(./supabase.exe init:*)"
+    ]
+  }
+}

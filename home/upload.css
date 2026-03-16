@@ -1,0 +1,83 @@
+/* Upload Page Styles */
+
+/* Drop Zone */
+#drop-zone {
+    transition: all 0.3s ease;
+}
+
+#drop-zone:hover {
+    border-color: color-mix(in srgb, var(--primary-color) 30%, transparent);
+    background: color-mix(in srgb, var(--primary-color) 2%, transparent);
+}
+
+#drop-zone.drag-over {
+    border-color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 5%, transparent);
+    transform: scale(1.02);
+}
+
+/* Form Input Focus Glow */
+input:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* Fix dropdown option text visibility */
+select option {
+    background-color: #0e1015; /* Base dark theme bg */
+    color: #f1f5f9; /* slate-100 */
+}
+
+/* Button shimmer effect */
+#upload-btn {
+    background: linear-gradient(90deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 70%, black));
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+#upload-btn:hover {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--primary-color) 80%, white), color-mix(in srgb, var(--primary-color) 60%, black));
+}
+
+/* File Info Badge */
+#file-info {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loader Spin */
+.loader-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .upload-card {
+        padding: 1.5rem;
+    }
+
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}

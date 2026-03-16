@@ -219,7 +219,7 @@ async function handleGoogleSignUp() {
     const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + '/login/login.html',
+            redirectTo: window.location.origin + '/home/home.html',
         },
     });
 
@@ -242,7 +242,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
         showToast(`Welcome, ${displayName}! 🎉`, 'success', 3500);
 
         setTimeout(() => {
-            // window.location.href = '../home/home.html';
+            window.location.href = '../home/home.html';
         }, 2000);
     }
 });

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Groups — StudyPlatform</title>
+    <meta name="description" content="Join study groups and collaborate with peers." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../theme.js"></script>
+
+    <link rel="stylesheet" href="home.css" />
+</head>
+
+<body class="bg-bg-dark font-display text-slate-100 min-h-screen flex flex-col">
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header class="flex items-center justify-between whitespace-nowrap px-5 md:px-12 py-4 z-30 bg-[#0e1015]/30 backdrop-blur-xl border-b border-white/[0.04]">
+        <div class="flex items-center gap-3 text-white">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-yellow-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                <svg class="w-5 h-5 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold tracking-tight">StudyPlatform</h2>
+        </div>
+        <div class="flex items-center gap-4">
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="home.html">Home</a>
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="browse.html">Browse</a>
+                <a class="text-[13px] font-medium text-primary border-b border-primary pb-0.5" href="groups.html">Groups</a>
+                <a class="text-[13px] font-medium text-slate-400 hover:text-primary transition-colors duration-300" href="leaderboard.html">Leaderboard</a>
+            </nav>
+            <div class="relative group">
+                <button onclick="toggleUserMenu()" class="w-8 h-8 rounded-full bg-surface border border-white/10 flex items-center justify-center cursor-pointer hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-slate-400" style="font-size:18px;">person</span>
+                </button>
+                <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-[#0e1015]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div class="px-4 py-3 border-b border-white/5">
+                        <p id="user-email" class="text-[13px] text-slate-400">Loading...</p>
+                    </div>
+                    <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-primary hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined" style="font-size:18px;">person</span>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="upload.html" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-primary hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined" style="font-size:18px;">upload</span>
+                        <span>Upload Material</span>
+                    </a>
+                    <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all border-t border-white/5 mt-1">
+                        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════ MAIN CONTENT ═══════════ -->
+    <main class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-12">
+
+        <!-- Header -->
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-extrabold text-white mb-2">Study Groups</h1>
+                <p class="text-slate-400">Find peers and collaborate on your studies</p>
+            </div>
+            <button onclick="openCreateGroupModal()" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-dark text-gray-900 font-semibold transition-all">
+                <span class="material-symbols-outlined" style="font-size:20px;">add</span>
+                Create Group
+            </button>
+        </div>
+
+        <!-- Groups Grid -->
+        <div id="groups-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16">
+            <span class="material-symbols-outlined text-slate-600" style="font-size:64px;">groups</span>
+            <h3 class="text-xl font-bold text-slate-400 mt-4">No groups yet</h3>
+            <p class="text-slate-600 mt-2 text-[14px]">Create the first study group or wait for others to start one!</p>
+            <button onclick="openCreateGroupModal()" class="mt-6 rounded-xl bg-primary hover:bg-primary-dark px-6 py-2.5 text-[14px] font-semibold text-gray-900 transition-all">
+                Create Study Group
+            </button>
+        </div>
+    </main>
+
+    <!-- Create Group Modal -->
+    <div id="create-group-modal" class="hidden fixed inset-0 bg-bg-dark/95 backdrop-blur-xl z-[1000] flex items-center justify-center p-4">
+        <div class="bg-[#0e1015]/40 backdrop-blur-[32px] rounded-[22px] border border-white/[0.08] p-8 w-full max-w-md"
+            style="box-shadow: 0 32px 64px -12px rgba(0,0,0,0.6);">
+
+            <h2 class="text-2xl font-extrabold text-white mb-6">Create Study Group</h2>
+
+            <form id="create-group-form" onsubmit="handleCreateGroup(event)">
+                <label class="flex flex-col gap-1.5 mb-4">
+                    <span class="text-[13px] font-medium text-slate-400">Group Name *</span>
+                    <input type="text" id="group-name" required placeholder="e.g., Data Structures Study Group"
+                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 placeholder:text-slate-600 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                </label>
+
+                <label class="flex flex-col gap-1.5 mb-4">
+                    <span class="text-[13px] font-medium text-slate-400">Branch</span>
+                    <select id="group-branch"
+                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]">
+                        <option value="">Select Branch (Optional)</option>
+                        <option value="computer_science">Computer Science</option>
+                        <option value="mechanical">Mechanical</option>
+                        <option value="electrical">Electrical</option>
+                        <option value="mathematics">Mathematics</option>
+                    </select>
+                </label>
+
+                <label class="flex flex-col gap-1.5 mb-6">
+                    <span class="text-[13px] font-medium text-slate-400">Subject</span>
+                    <input type="text" id="group-subject" placeholder="e.g., Data Structures"
+                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 placeholder:text-slate-600 px-4 text-[14px] transition-all focus:outline-none focus:border-primary/30 focus:bg-white/[0.05]" />
+                </label>
+
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary-dark text-gray-900 font-semibold transition-all">
+                        Create Group
+                    </button>
+                    <button type="button" onclick="closeCreateGroupModal()" class="flex-1 px-4 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white font-semibold transition-all">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <script src="../login/supabase-config.js"></script>
+    <script src="groups.js"></script>
+</body>
+
+</html>
