@@ -150,7 +150,7 @@
         </div>
 
         <!-- ═══════════ ACTION CARDS ═══════════ -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+        <div class="max-w-2xl mx-auto mb-12">
 
             <!-- Create Community Card -->
             <div class="action-card bg-[#0e1015]/50 backdrop-blur-md border border-white/[0.06] rounded-[24px] p-7 cursor-pointer"
@@ -170,25 +170,6 @@
                 </div>
                 <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-gradient-to-tl from-purple-500/8 to-transparent rounded-full blur-3xl pointer-events-none"></div>
             </div>
-
-            <!-- Study with Peer Card -->
-            <div class="action-card bg-[#0e1015]/50 backdrop-blur-md border border-white/[0.06] rounded-[24px] p-7 cursor-pointer"
-                 onclick="openFindPeerModal()">
-                <div class="flex items-start gap-5">
-                    <div class="action-icon w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-emerald-400" style="font-size:32px;">handshake</span>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-white mb-1.5">Study with a Peer</h3>
-                        <p class="text-[14px] text-slate-400 leading-relaxed mb-4">Find a study partner for 1-on-1 sessions. Match by subject, branch, or topic and learn together.</p>
-                        <div class="flex items-center gap-2 text-emerald-400">
-                            <span class="text-[13px] font-semibold">Find Peers</span>
-                            <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-gradient-to-tl from-emerald-500/8 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-            </div>
         </div>
 
         <!-- ═══════════ TABS ═══════════ -->
@@ -198,16 +179,13 @@
                 <span class="material-symbols-outlined align-middle mr-1.5" style="font-size:18px;">communities</span>
                 Communities
             </button>
-            <button class="tab-btn text-[14px] font-semibold text-slate-500 px-5 py-3 border-b-2 border-transparent transition-all rounded-t-lg hover:text-slate-300"
-                    data-tab="peers" onclick="switchTab('peers')">
-                <span class="material-symbols-outlined align-middle mr-1.5" style="font-size:18px;">person_search</span>
-                Study Peers
-            </button>
+
             <button class="tab-btn text-[14px] font-semibold text-slate-500 px-5 py-3 border-b-2 border-transparent transition-all rounded-t-lg hover:text-slate-300"
                     data-tab="my-groups" onclick="switchTab('my-groups')">
                 <span class="material-symbols-outlined align-middle mr-1.5" style="font-size:18px;">bookmark</span>
                 My Groups
             </button>
+
         </div>
 
         <!-- ═══════════ TAB: Communities ═══════════ -->
@@ -236,23 +214,7 @@
             </div>
         </div>
 
-        <!-- ═══════════ TAB: Study Peers ═══════════ -->
-        <div id="tab-peers" class="tab-content hidden">
-            <div id="peers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Populated by JS -->
-            </div>
-            <div id="peers-empty" class="hidden flex flex-col items-center justify-center py-20">
-                <div class="w-20 h-20 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-5">
-                    <span class="material-symbols-outlined text-emerald-400/60" style="font-size:40px;">person_search</span>
-                </div>
-                <h3 class="text-xl font-bold text-slate-400">No peer requests yet</h3>
-                <p class="text-slate-600 mt-2 text-[14px] max-w-xs text-center">Post a study peer request to find a buddy or browse available partners!</p>
-                <button onclick="openFindPeerModal()" class="mt-6 rounded-xl bg-emerald-500 hover:bg-emerald-600 px-6 py-2.5 text-[14px] font-semibold text-white transition-all flex items-center gap-2">
-                    <span class="material-symbols-outlined" style="font-size:18px;">add</span>
-                    Find a Peer
-                </button>
-            </div>
-        </div>
+
 
         <!-- ═══════════ TAB: My Groups ═══════════ -->
         <div id="tab-my-groups" class="tab-content hidden">
@@ -267,6 +229,8 @@
                 <p class="text-slate-600 mt-2 text-[14px] max-w-xs text-center">Join a community or find a study peer to get started!</p>
             </div>
         </div>
+
+
     </main>
 
     <!-- ═══════════ CREATE COMMUNITY MODAL ═══════════ -->
@@ -334,71 +298,9 @@
         </div>
     </div>
 
-    <!-- ═══════════ FIND PEER MODAL ═══════════ -->
-    <div id="find-peer-modal" class="hidden fixed inset-0 bg-bg-dark/90 backdrop-blur-xl z-[1000] flex items-center justify-center p-4 modal-overlay">
-        <div class="modal-content bg-[#0e1015]/60 backdrop-blur-[32px] rounded-[24px] border border-white/[0.08] p-8 w-full max-w-md"
-            style="box-shadow: 0 32px 64px -12px rgba(0,0,0,0.6), 0 0 80px -20px rgba(16,185,129,0.1);">
 
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-emerald-400" style="font-size:22px;">handshake</span>
-                </div>
-                <h2 class="text-2xl font-extrabold text-white">Find a Study Peer</h2>
-            </div>
 
-            <form id="find-peer-form" onsubmit="handleCreatePeerRequest(event)">
-                <label class="flex flex-col gap-1.5 mb-4">
-                    <span class="text-[13px] font-medium text-slate-400">What do you want to study? *</span>
-                    <input type="text" id="peer-topic" required placeholder="e.g., Linear Algebra, React.js"
-                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 placeholder:text-slate-600 px-4 text-[14px] transition-all focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05]" />
-                </label>
 
-                <label class="flex flex-col gap-1.5 mb-4">
-                    <span class="text-[13px] font-medium text-slate-400">Your Message</span>
-                    <textarea id="peer-message" rows="3" placeholder="Tell potential peers what you need help with..."
-                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md placeholder:text-slate-600 px-4 py-3 text-[14px] transition-all focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05] resize-none"></textarea>
-                </label>
-
-                <label class="flex flex-col gap-1.5 mb-4">
-                    <span class="text-[13px] font-medium text-slate-400">Preferred Schedule</span>
-                    <select id="peer-schedule"
-                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05]">
-                        <option value="anytime">Anytime</option>
-                        <option value="morning">Morning (6AM – 12PM)</option>
-                        <option value="afternoon">Afternoon (12PM – 5PM)</option>
-                        <option value="evening">Evening (5PM – 10PM)</option>
-                        <option value="night">Night (10PM – 2AM)</option>
-                    </select>
-                </label>
-
-                <label class="flex flex-col gap-1.5 mb-6">
-                    <span class="text-[13px] font-medium text-slate-400">Branch</span>
-                    <select id="peer-branch"
-                        class="flex w-full rounded-xl text-white border border-white/[0.07] bg-white/[0.03] backdrop-blur-md h-12 px-4 text-[14px] transition-all focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05]">
-                        <option value="">Any Branch</option>
-                        <option value="computer_science">Computer Science</option>
-                        <option value="mechanical">Mechanical</option>
-                        <option value="electrical">Electrical</option>
-                        <option value="civil">Civil</option>
-                        <option value="mathematics">Mathematics</option>
-                        <option value="physics">Physics</option>
-                        <option value="chemistry">Chemistry</option>
-                        <option value="biology">Biology</option>
-                    </select>
-                </label>
-
-                <div class="flex gap-3">
-                    <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition-all flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined" style="font-size:18px;">search</span>
-                        Post Request
-                    </button>
-                    <button type="button" onclick="closeFindPeerModal()" class="flex-1 px-4 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white font-semibold transition-all">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>

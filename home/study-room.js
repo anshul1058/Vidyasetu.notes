@@ -139,6 +139,36 @@ window.leaveRoom = () => {
     window.location.href = 'groups.html';
 };
 
+// ═══════════ End Meeting (closes room for everyone) ═══════════
+window.endMeeting = async () => {
+    if (!confirm('End this meeting? The room will be closed for everyone.')) return;
+
+    // Mark room as inactive in the database
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id && window.supabase) {
+            // Extract room code from the id (format: vidyasetu-CODE)
+            const roomCode = id.replace('vidyasetu-', '');
+            await window.supabase
+                .from('study_rooms')
+                .update({ is_active: false })
+                .eq('room_code', roomCode);
+        }
+    } catch (e) {
+        console.error('Error closing room in DB:', e);
+    }
+
+    if (jitsiApi) {
+        jitsiApi.dispose();
+        jitsiApi = null;
+    }
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+    window.location.href = 'groups.html';
+};
+
 // ═══════════ Timer ═══════════
 function updateTimer() {
     if (!startTime) return;

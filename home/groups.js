@@ -36,7 +36,6 @@ function loadUserInfo() {
 
 let currentUser = null;
 let allCommunities = [];
-let allPeerRequests = [];
 
 // ═══════════ Initialize ═══════════
 document.addEventListener('DOMContentLoaded', async () => {
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     currentUser = user;
-    await Promise.all([loadCommunities(), loadPeerRequests()]);
+    await loadCommunities();
 });
 
 // ═══════════ Tab Switching ═══════════
@@ -215,81 +214,7 @@ function renderCommunityCard(group) {
     `;
 }
 
-// ═══════════ STUDY PEERS ═══════════
-async function loadPeerRequests() {
-    const grid = document.getElementById('peers-grid');
-    const empty = document.getElementById('peers-empty');
 
-    try {
-        const { data: requests, error } = await window.supabase
-            .from('peer_requests')
-            .select(`*, requester:user_id (full_name, email)`)
-            .eq('status', 'open')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        if (!requests || requests.length === 0) {
-            grid.innerHTML = '';
-            empty.classList.remove('hidden');
-            return;
-        }
-
-        allPeerRequests = requests;
-        empty.classList.add('hidden');
-        grid.innerHTML = requests.map(renderPeerCard).join('');
-    } catch (error) {
-        console.error('Error loading peer requests:', error);
-        grid.innerHTML = '';
-        empty.classList.remove('hidden');
-    }
-}
-
-function renderPeerCard(req) {
-    const name = req.requester?.full_name || req.requester?.email?.split('@')[0] || 'Anonymous';
-    const isOwn = currentUser && req.user_id === currentUser.id;
-    const scheduleLabels = {
-        anytime: '🕐 Anytime',
-        morning: '🌅 Morning',
-        afternoon: '☀️ Afternoon',
-        evening: '🌆 Evening',
-        night: '🌙 Night'
-    };
-
-    return `
-        <div class="peer-card bg-[#0e1015]/40 backdrop-blur-md border border-white/[0.06] rounded-[20px] p-5">
-            <div class="flex items-start gap-3 mb-3">
-                <div class="relative">
-                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500/30 to-emerald-700/15 border border-emerald-500/30 flex items-center justify-center text-[15px] font-bold text-emerald-300">
-                        ${name.charAt(0).toUpperCase()}
-                    </div>
-                    <div class="online-dot absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-400 border-2 border-[#0e1015]"></div>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h3 class="text-[14px] font-bold text-white truncate">${escapeHtml(name)}</h3>
-                    <p class="text-[12px] text-emerald-400 font-medium mt-0.5">${escapeHtml(req.topic)}</p>
-                </div>
-            </div>
-
-            ${req.message ? `<p class="text-[13px] text-slate-400 mb-3 line-clamp-2">${escapeHtml(req.message)}</p>` : ''}
-
-            <div class="flex flex-wrap gap-2 mb-4">
-                <span class="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/15 text-emerald-400">
-                    ${scheduleLabels[req.schedule] || '🕐 Anytime'}
-                </span>
-                ${req.branch ? `<span class="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-slate-400">${req.branch.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>` : ''}
-            </div>
-
-            ${isOwn ?
-                `<button disabled class="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] text-slate-500 text-[13px] font-semibold">Your Request</button>` :
-                `<button onclick="connectWithPeer('${req.id}', '${req.user_id}')" class="w-full px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/20 text-emerald-400 text-[13px] font-semibold transition-all flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined" style="font-size:16px;">handshake</span>
-                    Study Together
-                </button>`
-            }
-        </div>
-    `;
-}
 
 // ═══════════ MY GROUPS ═══════════
 async function loadMyGroups() {
@@ -334,13 +259,7 @@ window.closeCreateCommunityModal = () => {
     document.getElementById('create-community-modal').classList.add('hidden');
     document.getElementById('create-community-form').reset();
 };
-window.openFindPeerModal = () => {
-    document.getElementById('find-peer-modal').classList.remove('hidden');
-};
-window.closeFindPeerModal = () => {
-    document.getElementById('find-peer-modal').classList.add('hidden');
-    document.getElementById('find-peer-form').reset();
-};
+
 
 // ═══════════ CREATE COMMUNITY ═══════════
 window.handleCreateCommunity = async (e) => {
@@ -391,43 +310,7 @@ window.handleCreateCommunity = async (e) => {
     }
 };
 
-// ═══════════ CREATE PEER REQUEST ═══════════
-window.handleCreatePeerRequest = async (e) => {
-    e.preventDefault();
 
-    const topic = document.getElementById('peer-topic').value.trim();
-    const message = document.getElementById('peer-message').value.trim() || null;
-    const schedule = document.getElementById('peer-schedule').value;
-    const branch = document.getElementById('peer-branch').value || null;
-
-    if (!topic) {
-        showToast('Study topic is required', 'error');
-        return;
-    }
-
-    try {
-        const { error } = await window.supabase
-            .from('peer_requests')
-            .insert([{
-                user_id: currentUser.id,
-                topic,
-                message,
-                schedule,
-                branch,
-                status: 'open'
-            }]);
-
-        if (error) throw error;
-
-        showToast('Peer request posted! 🤝', 'success');
-        closeFindPeerModal();
-        await loadPeerRequests();
-        switchTab('peers');
-    } catch (error) {
-        console.error('Error creating peer request:', error);
-        showToast(error.message || 'Failed to post request', 'error');
-    }
-};
 
 // ═══════════ JOIN GROUP ═══════════
 window.joinGroup = async (groupId) => {
@@ -472,51 +355,9 @@ window.joinGroup = async (groupId) => {
     }
 };
 
-// ═══════════ CONNECT WITH PEER ═══════════
-window.connectWithPeer = async (requestId, peerId) => {
-    if (!currentUser) return;
 
-    try {
-        // Create a 1-on-1 study group
-        const { data: group, error } = await window.supabase
-            .from('study_groups')
-            .insert([{
-                name: `Study Session`,
-                group_type: 'peer',
-                created_by: currentUser.id,
-                member_count: 2,
-                is_public: false
-            }])
-            .select()
-            .single();
 
-        if (error) throw error;
 
-        // Add both users as members
-        await window.supabase.from('group_members').insert([
-            { group_id: group.id, user_id: currentUser.id },
-            { group_id: group.id, user_id: peerId }
-        ]);
-
-        // Mark peer request as matched
-        await window.supabase
-            .from('peer_requests')
-            .update({ status: 'matched' })
-            .eq('id', requestId);
-
-        showToast('Connected! Entering study room... 🤝', 'success');
-        // Get the peer request topic for the room
-        const peerReq = allPeerRequests.find(r => r.id === requestId);
-        const topic = peerReq?.topic || 'Study Session';
-        // Navigate to study room
-        setTimeout(() => {
-            window.location.href = `study-room.html?id=${group.id}&topic=${encodeURIComponent(topic)}`;
-        }, 800);
-    } catch (error) {
-        console.error('Error connecting with peer:', error);
-        showToast(error.message || 'Failed to connect', 'error');
-    }
-};
 
 // ═══════════ HELPERS ═══════════
 function showEmpty(section) {
