@@ -532,7 +532,7 @@ async function handleGoogleSignIn() {
 
 // ───── Auth State Listener ─────
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session) {
+    if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
         const user = session.user;
         const displayName = user.user_metadata?.full_name || user.email || 'User';
         console.log('🔐 User signed in:', displayName, user.email);
