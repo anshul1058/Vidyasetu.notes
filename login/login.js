@@ -12,6 +12,32 @@ const header = document.getElementById('main-header');
 const loginCard = document.getElementById('login-card');
 const lampStatusText = document.getElementById('lamp-status-text');
 
+function getPostLoginRedirect() {
+    const fallback = '../home/home.html';
+    const redirect = new URLSearchParams(window.location.search).get('redirect');
+    if (!redirect) return fallback;
+
+    try {
+        const targetUrl = new URL(redirect, window.location.href);
+        if (targetUrl.origin !== window.location.origin || !targetUrl.pathname.includes('/home/')) {
+            return fallback;
+        }
+
+        return targetUrl.href;
+    } catch (error) {
+        console.error('Invalid redirect URL:', error);
+        return fallback;
+    }
+}
+
+function getOAuthRedirectUrl() {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+        return window.location.href;
+    }
+
+    return 'https://vidyasetu-notes.vercel.app/login/login.html';
+}
+
 // ───── Create floating particles ─────
 function createParticles() {
     const container = document.getElementById('particles-container');
@@ -172,6 +198,8 @@ function createToastContainer() {
     return container;
 }
 
+window.showToast = showToast;
+
 // ───── Login Handler ─────
 async function handleLogin(e) {
     e.preventDefault();
@@ -211,7 +239,7 @@ async function handleLogin(e) {
             showToast('Login successful!', 'success');
             // Redirect to home page after short delay
             setTimeout(() => {
-                window.location.href = '../home/home.html';
+                window.location.href = getPostLoginRedirect();
             }, 500);
         }
     } catch (error) {
@@ -504,7 +532,7 @@ async function handleGoogleSignIn() {
     const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'https://vidyasetu-notes.vercel.app/login/login.html',
+            redirectTo: getOAuthRedirectUrl(),
         },
     });
 
@@ -552,7 +580,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
         // Redirect after a short delay
         setTimeout(() => {
-            window.location.href = '../home/home.html';
+            window.location.href = getPostLoginRedirect();
         }, 2000);
 
     } else if (event === 'SIGNED_OUT') {

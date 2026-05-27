@@ -3,6 +3,39 @@
 // ───── Floating Particles ─────
 let particles = [];
 
+function getPostLoginRedirect() {
+    const fallback = '../home/home.html';
+    const redirect = new URLSearchParams(window.location.search).get('redirect');
+    if (!redirect) return fallback;
+
+    try {
+        const targetUrl = new URL(redirect, window.location.href);
+        if (targetUrl.origin !== window.location.origin || !targetUrl.pathname.includes('/home/')) {
+            return fallback;
+        }
+
+        return targetUrl.href;
+    } catch (error) {
+        console.error('Invalid redirect URL:', error);
+        return fallback;
+    }
+}
+
+function getLoginUrlWithRedirect() {
+    const loginUrl = new URL('login.html', window.location.href);
+    const redirect = new URLSearchParams(window.location.search).get('redirect');
+    if (redirect) loginUrl.searchParams.set('redirect', redirect);
+    return loginUrl.href;
+}
+
+function getOAuthRedirectUrl() {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+        return window.location.href;
+    }
+
+    return 'https://vidyasetu-notes.vercel.app/login/login.html';
+}
+
 function createParticles() {
     const container = document.getElementById('particles-container');
     const count = 25;
@@ -71,6 +104,8 @@ function showToast(message, type = 'info', duration = 4000) {
         });
     }, duration);
 }
+
+window.showToast = showToast;
 
 // ───── Password Visibility Toggle ─────
 function togglePasswordVisibility() {
@@ -195,7 +230,7 @@ async function handleEmailSignUp(e) {
 
     // Redirect to login after delay
     setTimeout(() => {
-        window.location.href = 'login.html';
+        window.location.href = getLoginUrlWithRedirect();
     }, 3000);
 }
 
@@ -219,7 +254,7 @@ async function handleGoogleSignUp() {
     const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'https://vidyasetu-notes.vercel.app/home/home.html',
+            redirectTo: getOAuthRedirectUrl(),
         },
     });
 
@@ -242,7 +277,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
         showToast(`Welcome, ${displayName}! 🎉`, 'success', 3500);
 
         setTimeout(() => {
-            window.location.href = '../home/home.html';
+            window.location.href = getPostLoginRedirect();
         }, 2000);
     }
 });
