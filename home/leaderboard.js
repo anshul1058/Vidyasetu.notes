@@ -133,15 +133,15 @@ async function loadLeaderboard() {
                    </div>`;
 
             return `
-                <div class="glass-panel glass-panel-hover rounded-[16px] p-4 flex items-center group relative overflow-hidden">
+                <div class="leaderboard-entry glass-panel glass-panel-hover rounded-[16px] p-4 flex items-center group relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     
-                    <div class="w-20 shrink-0 flex items-center justify-center gap-2 relative z-10">
+                    <div class="leaderboard-rank w-20 shrink-0 flex items-center justify-center gap-2 relative z-10">
                         <span class="text-2xl w-8 text-center drop-shadow-md">${medal}</span>
                         <span class="text-[14px] font-bold text-slate-500 group-hover:text-white transition-colors w-6 text-right">#${rank}</span>
                     </div>
                     
-                    <div class="flex-1 flex items-center gap-4 relative z-10">
+                    <div class="leaderboard-person flex-1 flex items-center gap-4 relative z-10">
                         <div class="relative">
                             <div class="absolute inset-0 bg-primary/30 rounded-full blur-[10px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-150"></div>
                             ${avatarContent}
@@ -152,18 +152,21 @@ async function loadLeaderboard() {
                         </div>
                     </div>
                     
-                    <div class="w-32 shrink-0 text-center relative z-10">
+                    <div class="leaderboard-stat w-32 shrink-0 text-center relative z-10">
+                        <span class="leaderboard-stat-label">Materials</span>
                         <span class="text-[15px] font-bold text-white block">${profile.materialsCount}</span>
                         <span class="text-[12px] text-slate-500">Material${profile.materialsCount === 1 ? '' : 's'}</span>
                     </div>
                     
-                    <div class="w-32 shrink-0 text-center flex justify-center relative z-10">
+                    <div class="leaderboard-stat w-32 shrink-0 text-center flex justify-center relative z-10">
+                        <span class="leaderboard-stat-label">Reputation</span>
                         <span class="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[13px] font-bold border flex-nowrap whitespace-nowrap ${badgeColor} transition-all duration-300">
                             ${profile.reputationScore} PTS
                         </span>
                     </div>
                     
-                    <div class="w-32 shrink-0 text-center relative z-10">
+                    <div class="leaderboard-stat w-32 shrink-0 text-center relative z-10">
+                        <span class="leaderboard-stat-label">Downloads</span>
                         <span class="flex items-center justify-center gap-1.5 text-[14px] font-bold text-emerald-400">
                             <span class="material-symbols-outlined" style="font-size: 16px;">download</span>
                             ${profile.totalDownloads}

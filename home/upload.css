@@ -77,6 +77,40 @@ select option {
         padding: 1.5rem;
     }
 
+    main {
+        align-items: flex-start !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 7rem !important;
+    }
+
+    main > div > div:first-child {
+        padding: 1.25rem !important;
+        border-radius: 1rem !important;
+    }
+
+    #drop-zone {
+        padding: 1.5rem 1rem !important;
+    }
+
+    #file-info {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    #file-name {
+        flex-basis: calc(100% - 2.25rem);
+    }
+
+    #file-size {
+        margin-left: 2rem;
+    }
+
+    #autonomous-container > div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
     .grid-cols-2 {
         grid-template-columns: 1fr;
     }

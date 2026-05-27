@@ -127,6 +127,71 @@
             mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
             -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
         }
+
+        @media (max-width: 767px) {
+            #main-header .max-w-7xl {
+                height: 4.25rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            body > main {
+                padding-top: 6rem !important;
+                padding-bottom: 3rem !important;
+            }
+
+            body > main > section:first-child {
+                min-height: auto !important;
+                gap: 2.5rem !important;
+            }
+
+            body > main > section:first-child h2 {
+                min-height: 8.25rem !important;
+                font-size: clamp(2.4rem, 11vw, 3.5rem) !important;
+                line-height: 1.06 !important;
+            }
+
+            #features,
+            #about {
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
+            }
+
+            .glass-card {
+                border-radius: 1.25rem !important;
+            }
+
+            .ambient-orb {
+                filter: blur(52px);
+                opacity: 0.55;
+            }
+
+            .orb-1 {
+                width: 240px;
+                height: 240px;
+            }
+
+            .orb-2 {
+                width: 220px;
+                height: 220px;
+                bottom: 15%;
+            }
+
+            .orb-3 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body > main > section:first-child h2 {
+                min-height: 7.5rem !important;
+                font-size: clamp(2.15rem, 12vw, 2.8rem) !important;
+            }
+
+            .typing-cursor {
+                border-right-width: 3px;
+            }
+        }
     </style>
 </head>
 

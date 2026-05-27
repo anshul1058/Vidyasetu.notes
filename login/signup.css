@@ -161,3 +161,29 @@ html {
 .strength-bar {
     transition: background-color 0.3s ease;
 }
+
+@media (max-width: 767px) {
+    #signup-card {
+        padding: 1.25rem !important;
+        gap: 1rem !important;
+        border-radius: 1rem !important;
+    }
+
+    #signup-card h1 {
+        font-size: 1.75rem !important;
+    }
+
+    .social-btn {
+        min-height: 3rem;
+    }
+
+    .toast {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    #signup-card {
+        padding: 1rem !important;
+    }
+}

@@ -334,3 +334,44 @@ body.lamp-off #lamp-status-text {
     background: rgba(16, 185, 129, 0.08) !important;
     pointer-events: none;
 }
+
+@media (max-width: 767px) {
+    body.lamp-off #login-card {
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
+    }
+
+    body.lamp-off #main-header {
+        opacity: 1 !important;
+    }
+
+    #login-card {
+        padding: 1.25rem !important;
+        gap: 1rem !important;
+    }
+
+    #login-card h1 {
+        font-size: 1.75rem !important;
+    }
+
+    #login-card .flex.justify-between {
+        align-items: flex-start;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .social-btn {
+        min-height: 3rem;
+    }
+
+    .toast {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    #login-card {
+        padding: 1rem !important;
+    }
+}

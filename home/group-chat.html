@@ -59,8 +59,49 @@
 
         .sidebar { transition: transform 0.3s ease; }
         @media (max-width: 768px) {
-            .sidebar { position: fixed; top: 64px; right: 0; bottom: 0; z-index: 40; transform: translateX(100%); }
+            .sidebar {
+                position: fixed;
+                top: 64px;
+                right: 0;
+                bottom: 0;
+                z-index: 40;
+                width: min(20rem, 86vw) !important;
+                transform: translateX(100%);
+                box-shadow: -24px 0 48px rgba(0,0,0,0.35);
+            }
             .sidebar.open { transform: translateX(0); }
+
+            #chat-group-name {
+                max-width: 48vw;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .messages-area {
+                padding: 1rem !important;
+            }
+
+            .msg-bubble {
+                max-width: 88% !important;
+            }
+
+            .msg-other {
+                gap: 0.5rem !important;
+            }
+
+            .msg-other > div:first-child {
+                width: 1.75rem !important;
+                height: 1.75rem !important;
+            }
+
+            #file-preview {
+                flex-wrap: wrap;
+            }
+
+            #file-preview-name {
+                flex-basis: calc(100% - 3rem);
+            }
         }
 
         .file-drop-highlight {
